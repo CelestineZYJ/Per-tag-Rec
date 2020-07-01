@@ -1,5 +1,12 @@
 # Personalized-Hashtag-Recommendation
 
+extra resource for hashtag generation:02/15
+semantically enhanced tag recommendation:08/10
+historical posts:03/04
+post-based personal information:05/07/16
+deep learning:09/10
+topic model:16
+
 02-CIKM-address the hashtag long-tail phenomenon by constructing a hashtag graph with external knowledge and integrating a propagation mechanism to exploit hashtag correlations.
 
 03-CCL-combine both content and hashtag information from historical posts
@@ -17,8 +24,6 @@
 10－ISCE－Semantically enhanced tag recommendation for software CQAs via deep learning
 
 11-IJCAI-devise an embedding model, called Hashtag2Vec, which exploits multiple relations of hashtag-hashtag, hashtag-tweet, tweet-word, and word-word relations based on the hierarchical heterogeneous network
-
-13－journal－devise an embedding model, called Hashtag2Vec, which exploits multiple relations of hashtag-hashtag, hashtag-tweet, tweet-word, and word-word relations based on the hierarchical heterogeneous network
 
 15－QiZhang－propose a novel method that extends the translation based model and incorporates the temporal and personal factors. To overcome the limitation of only being able to recommend hashtags that exist in the training data of the existing methods, the proposed method also incorporates extraction strategies into it.
 
