@@ -1,11 +1,20 @@
 # Personalized-Hashtag-Recommendation
 
-extra resource for hashtag generation:02/15
-semantically enhanced tag recommendation:08/10
-historical posts:03/04
-post-based personal information:05/07/16
-deep learning:09/10
-topic model:16
+
+
+## extra resource for hashtag generation:02/15
+
+## semantically enhanced tag recommendation:08/10
+
+## historical posts:03/04
+
+## post-based personal information:05/07/16
+
+## deep learning:09/10
+
+## topic model:16
+
+
 
 02-CIKM-address the hashtag long-tail phenomenon by constructing a hashtag graph with external knowledge and integrating a propagation mechanism to exploit hashtag correlations.
 
