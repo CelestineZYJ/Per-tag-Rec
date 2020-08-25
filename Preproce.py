@@ -11,21 +11,21 @@ def get_hashtag(content):
     """
     Get the hashtag from the content.
     """
-    words = content.split()
+    words = str(content).split()
     hashtag = [word for word in words if re.search(r'^#', word)]
     return hashtag
 
 
 def get_tag_file(dataframe):
     dataframe['hashtag'] = dataframe['content'].apply(get_hashtag)
-    dataframe.to_csv("./data/plusTag.txt", sep='\t', index=False)
+    # dataframe.to_csv("./data/plusTag.txt", sep='\t', index=False)
 
     dataframe1 = dataframe.explode('hashtag')
-    dataframe1.to_csv("./data/explodeTag.txt", sep='\t', index=False)
+    # dataframe1.to_csv("./data/explodeTag.txt", sep='\t', index=False)
 
-    dataframe2 = dataframe1.groupby(['hashtag'], as_index=False)['hashtag'].agg({'cnt':'count'})
+    dataframe2 = dataframe1.groupby(['hashtag'], as_index=False)['hashtag'].agg({'cnt': 'count'})
     dataframe2 = dataframe2.sort_values(by=['cnt'], ascending=False)
-    dataframe2.to_csv("./data/countTag.txt", sep='\t', index=False)
+    # dataframe2.to_csv("./data/countTag.txt", sep='\t', index=False)
 
 
 """
@@ -45,10 +45,10 @@ def filter_single_user(dataframe):
     dataframe1 = dataframe1[dataframe1['user_id'].isin(dataframe2['user_id'].tolist())]
     dataframe2 = dataframe2[dataframe2['user_id'].isin(dataframe1['user_id'].tolist())]
 
-    dataframe1.to_csv("./data/trainSet.txt", sep='\t', index=False)
-    dataframe2.to_csv("./data/testSet.txt", sep='\t', index=False)
+    # dataframe1.to_csv("./data/trainSet.txt", sep='\t', index=False)
+    # dataframe2.to_csv("./data/testSet.txt", sep='\t', index=False)
 
 
 if __name__ == "__main__":
-    # get_tag_file(df1)
-    filter_single_user(df2)
+    get_tag_file(df1)
+    # filter_single_user(df2)
