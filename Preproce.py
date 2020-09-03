@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-import matplotlib.pyplot as plt
 path1 = "./data/tweetTag.txt"
 path2 = "./data/plusTag.txt"
 df1 = pd.read_table(path1, names=['tweet_id', 'user_id', 'time', 'content'])
@@ -48,7 +47,36 @@ def filter_single_user(dataframe):
     # dataframe1.to_csv("./data/trainSet.txt", sep='\t', index=False)
     # dataframe2.to_csv("./data/testSet.txt", sep='\t', index=False)
 
+    # filter users whose tweets are more than 5 in training set
+    dataframe3 = dataframe1.groupby(['user_id'], as_index=False)['user_id'].agg({'cnt': 'count'})
+    dataframe3 = dataframe3.loc[dataframe3['cnt'] >= 5]
+
+    dataframe4 = dataframe1[dataframe1['user_id'].isin(dataframe3['user_id'].tolist())]
+    dataframe5 = dataframe2[dataframe2['user_id'].isin(dataframe3['user_id'].tolist())]
+
+    dataframe4.to_csv("./data/trainSet.txt", sep='\t', index=False)
+    dataframe5.to_csv("./data/testSet.txt", sep='\t', index=False)
+
+    # get the hashtags sorted by count appearing in train set
+    dataframe4 = dataframe4.drop(['hashtag'], axis=1)
+    dataframe4['hashtag'] = dataframe4['content'].apply(get_hashtag)
+    dataframe4 = dataframe4.explode('hashtag').groupby(['hashtag'], as_index=False)['hashtag'].agg({'cnt': 'count'})
+    dataframe6 = dataframe4.sort_values(by=['cnt'], ascending=False)
+    dataframe6.to_csv("./data/countTrainTag.txt", sep='\t', index=False)
+
+    # get the hashtags sorted by count appearing in test set
+    dataframe5 = dataframe5.drop(['hashtag'], axis=1)
+    dataframe5['hashtag'] = dataframe5['content'].apply(get_hashtag)
+    dataframe5 = dataframe5.explode('hashtag').groupby(['hashtag'], as_index=False)['hashtag'].agg({'cnt': 'count'})
+    dataframe7 = dataframe5.sort_values(by=['cnt'], ascending=False)
+    dataframe7.to_csv("./data/countTestTag.txt", sep='\t', index=False)
+
+    # calculate the overlap number of hashtag both in train and test set
+    train_tag_list = dataframe6['hashtag'].tolist()
+    test_tag_list = dataframe7['hashtag'].tolist()
+    print(len(set(train_tag_list)&set(test_tag_list)))
+
 
 if __name__ == "__main__":
-    get_tag_file(df1)
-    # filter_single_user(df2)
+    # get_tag_file(df1)
+    filter_single_user(df2)
