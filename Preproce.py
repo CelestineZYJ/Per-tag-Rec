@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+
 path1 = "./data/tweetTag.txt"
 path2 = "./data/plusTag.txt"
 df1 = pd.read_table(path1, names=['tweet_id', 'user_id', 'time', 'content'])
@@ -10,7 +11,7 @@ def get_hashtag(content):
     """
     Get the hashtag from the content.
     """
-    words = str(content).split()
+    words = re.split(r'[,.! "\']', str(content))
     hashtag = [word for word in words if re.search(r'^#', word)]
     return hashtag
 
@@ -74,7 +75,7 @@ def filter_single_user(dataframe):
     # calculate the overlap number of hashtag both in train and test set
     train_tag_list = dataframe6['hashtag'].tolist()
     test_tag_list = dataframe7['hashtag'].tolist()
-    print(len(set(train_tag_list)&set(test_tag_list)))
+    print(len(set(train_tag_list) & set(test_tag_list)))
 
 
 if __name__ == "__main__":
