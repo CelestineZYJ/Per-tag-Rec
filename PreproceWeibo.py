@@ -1,7 +1,9 @@
-from pandas.io.json import json_normalize
 import pandas as pd
 import os
 import json
+
+trainWeibo = './data/trainWeibo.txt'
+testWeibo = './data/testWeibo.txt'
 
 
 def list_to_json(lis, filename, filepath):
@@ -34,31 +36,32 @@ def filter_5_weibo(df):
     return df_5more
 
 
-def filter_both_user(df1, df2):
+def filter_both_user(df1, df2, label, file1, file2):
     df_train = df1[df1['user_id'].isin(df2['user_id'].tolist())]
     df_test = df2[df2['user_id'].isin(df1['user_id'].tolist())]
-    df_train.to_csv("./data/trainWeibo.txt", sep='\t', index=False)
-    df_test.to_csv("./data/testWeibo.txt", sep='\t', index=False)
+    df_train.to_csv(file1, sep='\t', index=False)
+    df_test.to_csv(file2, sep='\t', index=False)
 
     # data analysis
     print('number of train user: '+str(df_train.groupby(['user_id'], as_index=False)['user_id'].agg({'cnt': 'count'}).shape[0]))
     print('number of test user: '+str(df_test.groupby(['user_id'], as_index=False)['user_id'].agg({'cnt': 'count'}).shape[0]))
     print('number of train weibo: '+str(df_train.shape[0]))
     print('number of test weibo: '+str(df_test.shape[0]))
-    train_tag = df_train.explode('topics').groupby(['topics'], as_index=False)['topics'].agg({'cnt': 'count'})
-    test_tag = df_test.explode('topics').groupby(['topics'], as_index=False)['topics'].agg({'cnt': 'count'})
+    train_tag = df_train.explode(label).groupby([label], as_index=False)[label].agg({'cnt': 'count'})
+    test_tag = df_test.explode(label).groupby([label], as_index=False)[label].agg({'cnt': 'count'})
     print('number of train hashtags: '+str(train_tag.shape[0]))
     print('number of test hashtags: ' + str(test_tag.shape[0]))
-    print('number of overlap hashtags: '+str(train_tag[train_tag['topics'].isin(test_tag['topics'].tolist())].shape[0]))
+    print('number of overlap hashtags: '+str(train_tag[train_tag[label].isin(test_tag[label].tolist())].shape[0]))
 
 
-def divide_train_test(df):
+def divide_train_test(df, file1, file2):
+    label = 'topics'
     df_train = df[1:92066]
     df_test = df[92067:]
     df_train = filter_5_weibo(df_train)
-    filter_both_user(df_train, df_test)
+    filter_both_user(df_train, df_test, label, file1, file2)
 
 
 if __name__ == "__main__":
-    divide_train_test(filter_hashtag())
+    divide_train_test(filter_hashtag(), trainWeibo, testWeibo)
 
