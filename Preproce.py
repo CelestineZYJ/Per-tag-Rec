@@ -18,23 +18,21 @@ def get_hashtag(content):
 
 def get_tag_file(dataframe):
     dataframe['hashtag'] = dataframe['content'].apply(get_hashtag)
-    # dataframe.to_csv("./data/plusTag.txt", sep='\t', index=False)
+    dataframe.to_csv("./data/plusTag.txt", sep='\t', index=False)
 
     dataframe1 = dataframe.explode('hashtag')
-    # dataframe1.to_csv("./data/explodeTag.txt", sep='\t', index=False)
+    dataframe1.to_csv("./data/explodeTag.txt", sep='\t', index=False)
 
     dataframe2 = dataframe1.groupby(['hashtag'], as_index=False)['hashtag'].agg({'cnt': 'count'})
     dataframe2 = dataframe2.sort_values(by=['cnt'], ascending=False)
-    # dataframe2.to_csv("./data/countTag.txt", sep='\t', index=False)
+    dataframe2.to_csv("./data/countTag.txt", sep='\t', index=False)
 
 
-"""
-def get_tag_hist(dataframe):
-    list1 = dataframe['cnt'].values.tolist()
-    print(list1)
-    plt.hist(list1, 10)
-    plt.show()
-"""
+def get_train_content(f):
+    df = pd.read_table(f)
+    df = df.drop(['tweet_id', 'user_id', 'time', 'hashtag'], axis=1)
+    print(df)
+    df.to_csv('./data/trainContent.txt')
 
 
 def filter_single_user(dataframe):
@@ -80,4 +78,5 @@ def filter_single_user(dataframe):
 
 if __name__ == "__main__":
     # get_tag_file(df1)
-    filter_single_user(df2)
+    # filter_single_user(df2)
+    get_train_content('./data/trainSet.txt')
