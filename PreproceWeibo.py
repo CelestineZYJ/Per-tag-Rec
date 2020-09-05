@@ -17,7 +17,7 @@ def list_to_json(lis, filename, filepath):
 
 def filter_hashtag():
     weibo = []
-    file = open('./data/weibo_data_month.json', 'r', encoding='utf-8')
+    file = open('weibo_data2.txt', 'r', encoding='utf-8')
     for line in file.readlines():
         dic = json.loads(line)
         if dic['topics']:
@@ -56,8 +56,8 @@ def filter_both_user(df1, df2, label, file1, file2):
 
 def divide_train_test(df, file1, file2):
     label = 'topics'
-    df_train = df[1:92066]
-    df_test = df[92067:]
+    df_train = df[1:2034202]
+    df_test = df[2034203:]
     df_train = filter_5_weibo(df_train)
     filter_both_user(df_train, df_test, label, file1, file2)
 

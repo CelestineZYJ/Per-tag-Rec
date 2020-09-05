@@ -4,15 +4,15 @@ import Preproce
 from sklearn.metrics.pairwise import cosine_similarity
 import json
 trainSet = './data/trainSet.txt'
-contentEmb = './data/conEmb.json'
+contentEmb = './data/embeddings.json'
 tagEmb = './data/tagEmb.txt'
 userEmb = './data/userEmb.txt'
 
 
 # basic layer
 def content_embedding(content, con_emb_dict):
-    # return con_emb_dict[content]
-    return [1]*768
+    return con_emb_dict[content]
+    # return [1]*768
 
 
 # second layer
@@ -59,8 +59,8 @@ def cosine_similar(user, hashtag, train_df, con_emb_dict):
 
 
 def rank_hashtag(train, content_emb):
-    # fake con_emb_dict
-    con_emb_dict = []
+    # con_emb_dict = []
+    # 读取content_emb文件给con_emb_dict赋值
     train_df = pd.read_table(train)
     user_set = set(train_df['user_id'].tolist())
     train_df['hashtag'] = train_df['content'].apply(Preproce.get_hashtag)
