@@ -65,7 +65,7 @@ def rank_hashtag(train_df, con_emb_dict):
     tag_set = set(train_df['hashtag'].explode('hashtag').tolist())
 
     # dictionary to return hashtag recommendation score to all user
-    user_list = ['degimono']#list(user_set)
+    user_list = list(user_set)
     spe_user_cos_list = []
     for user in user_list:
         tag_list = list(tag_set)[1:4]
@@ -87,26 +87,29 @@ def rank_hashtag(train_df, con_emb_dict):
     return rank_dict
 
 
-def embedding_rec(user, train_df, con_emb_dict):
-    # 读取content_emb文件给con_emb_dict赋值
-    con_emb_dict = []
-    rank_dict = rank_hashtag(train_df, con_emb_dict)
-    print(rank_dict[user][0])
-    return ['#NODAYSOFF']#rank_dict[user][0]
+def embedding_rec(user, rank_dict):
+    return ['#NODAYSOFF']                            #rank_dict[user][0]
 
 
 def eval_rec(train, test, content_emb):
+    # 读取content_emb文件给con_emb_dict赋值
     con_emb_dict = []
+    
     train_df = pd.read_table(train)
     test_df = pd.read_table(test)
+
+    # calculate the whole rec dict of cosine_similarity of each hashtag to each user
+    rank_dict = rank_hashtag(train_df, con_emb_dict)
+
     user_train_df = train_df.drop(['tweet_id', 'time', 'content', 'hashtag'], axis=1)
-    user_set = ['degimono']# set(list(user_train_df['user_id']))
+    user_set = set(list(user_train_df['user_id']))
     print(len(user_set))
     user_test_df = test_df.drop(['tweet_id', 'time', 'hashtag'], axis=1)
 
     success = 0
     for user in user_set:                         # 重复出现的user要记得筛掉
-        tag_list = embedding_rec(user, train_df, con_emb_dict)
+        print('score of tag rec for: '+user)
+        tag_list = embedding_rec(user, rank_dict)
         for tag in tag_list:
             if tag in Preproce.get_hashtag(user_test_df[user_test_df['user_id'] == user]['content']):
                 success += 1
