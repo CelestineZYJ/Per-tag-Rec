@@ -11,7 +11,7 @@ def get_hashtag(content):
     """
     Get the hashtag from the content.
     """
-    words = re.split(r'[,.! "\']', str(content))
+    words = re.split(r'[:,.! "\']', str(content))
     hashtag = [word for word in words if re.search(r'^#', word)]
     # print(type(hashtag[0]))
     return hashtag
@@ -79,6 +79,6 @@ def filter_single_user(dataframe):
 
 if __name__ == "__main__":
     # get_tag_file(df1)
-    # filter_single_user(df2)
+    filter_single_user(df2)
     # get_train_content('./data/trainSet.txt')
-    get_hashtag('#lalala i want to #yes go')
+    # get_hashtag('#lalala i want to #yes go')

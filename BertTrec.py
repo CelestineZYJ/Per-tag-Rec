@@ -23,8 +23,41 @@ Tag_list = list(set(Tag_df['hashtag'].tolist()))[1:]
 # Tag_list.remove('nan')
 # 读取content_emb文件给con_emb_dict赋值user_tag_lis
 
+##############################################################################
+popular_tag_df = pd.read_table('./data/countTag.txt')
+popular_tag_lis = []
+for i in range(500):
+    popular_tag_lis.append(popular_tag_df['hashtag'].loc[i])
+##############################################################################
+
 with open("data/embeddings.json", "r") as f:
     con_emb_dict = json.load(f)
+
+
+def cal_upper_bound(user_lis):
+    user_test_df = test_df
+    user_test_df['hashtag'] = user_test_df['content'].apply(Preproce.get_hashtag)
+
+    print(user_test_df['hashtag'])
+'''
+    success = 0
+    for user in user_lis:  # 重复出现的user要记得筛掉
+        # print('score of tag rec for: '+user)
+        spec_tag_lis = popular_tag_lis
+        # spec_tag_lis = user_tag_df['hashtag'].loc[user_tag_df['user_id'] == user].tolist()[0]
+        print(spec_tag_lis)
+        each = 0
+        test_tag_lis = user_test_df['hashtag'].loc[user_test_df['user_id'] == user].tolist()
+        print(test_tag_lis)
+        for tag in spec_tag_lis:
+            if tag in test_tag_lis:
+                success += 1
+                each += 1
+                break
+        print(each)
+
+    print("history upper bound: " + str(success / len(user_list)))
+'''
 
 
 # basic layer
@@ -80,14 +113,14 @@ def rank_hashtag():
     for user in tqdm(user_list):
         cosine_list = []
         spec_tag_lis = user_tag_df['hashtag'].loc[user_tag_df['user_id'] == user].tolist()[0]
-        print(str(user)+': '+str(len(spec_tag_lis)))     ##################################################
+        print(str(user)+': '+str(len(spec_tag_lis)))
         for tag in spec_tag_lis:
             if str(tag) != 'nan':
                 # print('yes')
                 cosine_list.append(cosine_similar(user, tag, user_arr_dict, tag_arr_dict))
         # tag_cos_dict = OrderedDict()
-        tag_cos_dict = dict(zip(cosine_list, spec_tag_lis)) ########################################################
-        tag_cos_dict = sorted(tag_cos_dict.items(), reverse=True)####################################################
+        tag_cos_dict = dict(zip(cosine_list, spec_tag_lis))
+        tag_cos_dict = sorted(tag_cos_dict.items(), reverse=True)
         # print(tag_cos_dict)
         spe_user_cos_list.append(tag_cos_dict)
 
@@ -124,8 +157,9 @@ def eval_rec(user_lis):
     for user in user_lis:                         # 重复出现的user要记得筛掉
         # print('score of tag rec for: '+user)
         tag_lis = embedding_rec(user, rank_dict)
+        test_tag_lis = Preproce.get_hashtag(user_test_df[user_test_df['user_id'] == user]['content'])
         for tag in tag_lis:
-            if tag in Preproce.get_hashtag(user_test_df[user_test_df['user_id'] == user]['content']):
+            if tag in test_tag_lis:
                 success += 1
                 break
 
@@ -133,7 +167,8 @@ def eval_rec(user_lis):
 
 
 if __name__ == '__main__':
-    eval_rec(user_list)
+    # eval_rec(user_list)
+    cal_upper_bound(user_list)
     '''
     a = ['user1', 'user2', 'user3']
     b = ['tag1', 'tag2', 'tag3', 'tag4']

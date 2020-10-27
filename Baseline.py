@@ -29,7 +29,7 @@ def popular_rec(dataframe):
 
 def latest_rec(user, dataframe):
     tag_rec = []
-    dataframe = dataframe.sort_values(by=['tweet_id'], ascending=False)
+    dataframe = dataframe.sort_values(by=['tweet_id'], ascending=False)  ##############time
     user_df = dataframe['content'].loc[dataframe['user_id'] == user]
     for i in range(5):
         tag_rec += Preproce.get_hashtag(user_df.iloc[i])

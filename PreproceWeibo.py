@@ -17,7 +17,7 @@ def list_to_json(lis, filename, filepath):
 
 def filter_hashtag():
     weibo = []
-    file = open('weibo_data2.txt', 'r', encoding='utf-8')
+    file = open('./data/weibo_data2.txt', 'r', encoding='utf-8')
     for line in file.readlines():
         dic = json.loads(line)
         if dic['topics']:
